@@ -3,12 +3,33 @@
 </ActionBar>
 
 <GridLayout>
-  <ListView [items]="items$ | async">
-    <ng-template let-item="item" let-i="index" let-odd="odd" let-even="even">
+  <RadListView
+    [items]="items$ | async"
+    pullToRefresh="true"
+    (pullToRefreshInitiated)="onPullToRefresh($event)"
+  >
+    <ng-template tkListItemTemplate let-item="item">
       <StackLayout>
         <Label [text]="item.name"></Label>
         <label [text]="item.id"></label>
+        <label [text]="item.position"></label>
       </StackLayout>
     </ng-template>
-  </ListView>
+    <ng-template tkListViewFooter>
+      <FlexboxLayout
+        justifyContent="flex-end"
+        width="100%"
+        id="addButtonContainer"
+        left="0"
+      >
+        <Button
+          class="add-button"
+          row="0"
+          col="1"
+          text="+"
+          (tap)="onAdd()"
+        ></Button>
+      </FlexboxLayout>
+    </ng-template>
+  </RadListView>
 </GridLayout>

@@ -19,6 +19,20 @@ export class ItemsService {
         this.itemsCollection = firebase.firestore.collection("items");
     }
 
+    get() {
+        // console.log("Get call");
+
+        this.itemsCollection
+            .get()
+            .then((docs) => {
+                // console.log("Document: ", docs);
+                const itemsData = [];
+                docs.forEach((item) => itemsData.push(item.data()));
+                this._items.next(itemsData);
+            })
+            .catch((err) => console.log(err));
+    }
+
     getItems() {
         console.log("Service call");
 

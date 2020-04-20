@@ -1,0 +1,34 @@
+<ActionBar title="Add Items"></ActionBar>
+
+<GridLayout>
+  <ScrollView>
+    <StackLayout class="home-panel">
+      <FlexboxLayout flexDirection="column" justifyContent="center">
+        <TextField
+          keyboardType="number"
+          class="form-control"
+          width="100%"
+          hint="ID"
+          [(ngModel)]="item.id"
+          returnKeyType="next"
+        ></TextField>
+        <TextField
+          class="form-control"
+          width="100%"
+          hint="Name"
+          [(ngModel)]="item.name"
+          returnKeyType="next"
+        ></TextField>
+        <TextField
+          class="form-control"
+          width="100%"
+          hint="Position"
+          [(ngModel)]="item.position"
+          returnKeyType="next"
+        ></TextField>
+
+        <Button text="Save" class="btn" width="100%" (tap)="onSave()"></Button>
+      </FlexboxLayout>
+    </StackLayout>
+  </ScrollView>
+</GridLayout>

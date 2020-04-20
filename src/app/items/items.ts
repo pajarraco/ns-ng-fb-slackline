@@ -3,3 +3,9 @@ export interface DataItem {
     name: string;
     position: string;
 }
+
+export class Item {
+    id: number;
+    name: string;
+    position: string;
+}

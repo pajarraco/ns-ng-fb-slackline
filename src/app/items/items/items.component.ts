@@ -2,42 +2,9 @@ import { Component, OnInit } from "@angular/core";
 import { Observable, BehaviorSubject } from "rxjs";
 import { ItemsService } from "../items.service";
 import { DataItem } from "../items";
-
-let test = [
-    {
-        name: "Leonardo La Fontaine",
-        id: 4,
-        position: "Defender",
-    },
-    {
-        name: "Miguelangel La Fontaine",
-        id: 2,
-        position: "Middle Center",
-    },
-    {
-        name: "Ernesto La Fontaine",
-        id: 1,
-        position: "Goalkeeper",
-    },
-];
-
-let test2 = [
-    {
-        name: "Leonardo La Fontaine",
-        id: 21,
-        position: "Defender",
-    },
-    {
-        name: "Miguelangel La Fontaine",
-        id: 2,
-        position: "Middle Center",
-    },
-    {
-        name: "Ernesto La Fontaine",
-        id: 1,
-        position: "Goalkeeper",
-    },
-];
+import { ListViewEventData } from "nativescript-ui-listview";
+import { ActivatedRoute } from "@angular/router";
+import { RouterExtensions } from "nativescript-angular/router";
 
 @Component({
     selector: "ns-items",
@@ -45,17 +12,43 @@ let test2 = [
     styleUrls: ["./items.component.css"],
 })
 export class ItemsComponent implements OnInit {
-    private items$: BehaviorSubject<Array<DataItem>> = new BehaviorSubject([]);
+    items$: Observable<Array<DataItem>>;
 
-    constructor(private itemsService: ItemsService) {
-        this.itemsService.getItems();
+    constructor(
+        private itemsService: ItemsService,
+        private routerExtensions: RouterExtensions,
+        private activeRoute: ActivatedRoute
+    ) {
+        this.items$ = this.itemsService.items;
+        this.itemsService.get();
     }
 
     ngOnInit(): void {
-        this.itemsService.items.subscribe((items) => {
-            if (items.length > 0) {
-                this.items$.next(items);
-            }
+        // this.itemsService.items.subscribe((items) => {
+        //     if (items.length > 0) {
+        //         console.log(items);
+        //     }
+        // });
+    }
+
+    onAdd() {
+        console.log("Add");
+        this.routerExtensions.navigate(["../add"], {
+            relativeTo: this.activeRoute,
+            animated: true,
+            transition: {
+                name: "slideLeft",
+                duration: 200,
+                curve: "easeIn",
+            },
         });
+    }
+
+    onPullToRefresh(args: ListViewEventData) {
+        console.log("Pull to Refresh");
+        this.itemsService.get();
+
+        const listView = args.object;
+        listView.notifyPullToRefreshFinished();
     }
 }
