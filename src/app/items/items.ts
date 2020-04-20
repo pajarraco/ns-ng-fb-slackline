@@ -1,11 +1,11 @@
 export interface DataItem {
-    id: number;
+    id: string;
     name: string;
     position: string;
 }
 
 export class Item {
-    id: number;
+    id: string;
     name: string;
     position: string;
 }

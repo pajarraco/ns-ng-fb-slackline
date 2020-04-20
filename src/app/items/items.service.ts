@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { firestore } from "nativescript-plugin-firebase";
 import { BehaviorSubject, Observable } from "rxjs";
-import { DataItem } from "./items";
+import { DataItem, Item } from "./items";
 
 const firebase = require("nativescript-plugin-firebase");
 
@@ -23,13 +23,26 @@ export class ItemsService {
         // console.log("Get call");
 
         this.itemsCollection
+            .orderBy("name", "asc")
             .get()
-            .then((docs) => {
+            .then((docs: firestore.QuerySnapshot) => {
                 // console.log("Document: ", docs);
                 const itemsData = [];
-                docs.forEach((item) => itemsData.push(item.data()));
+                docs.forEach((item: firestore.DocumentSnapshot) => {
+                    const data = item.data();
+                    data.id = item.id;
+                    itemsData.push(data);
+                });
                 this._items.next(itemsData);
             })
+            .catch((err) => console.log(err));
+    }
+
+    add(item: DataItem) {
+        console.log("add call");
+        this.itemsCollection
+            .add(item)
+            .then((documentRef) => console.log("DocRef: ", documentRef))
             .catch((err) => console.log(err));
     }
 

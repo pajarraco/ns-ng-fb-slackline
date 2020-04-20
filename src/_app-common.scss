@@ -20,7 +20,7 @@
   font-weight: 400;
 }
 
-// Custom tabstrip item class
+// Custom tab strip item class
 .navigation__item {
   &:active,
   &:active Label {
@@ -30,7 +30,7 @@
 
 // Common page class
 .page__content {
-  font-size: 24;
+  font-size: 16;
   &-icon,
   &-placeholder {
     color: const(grey);
@@ -47,7 +47,7 @@
 }
 
 .add-button {
-  background-color: const(grey);
+  background-color: const(blue);
   width: 70;
   height: 70;
   font-size: 50;
@@ -59,4 +59,5 @@
 
 .form-control {
   margin-bottom: 10px;
+  font-size: 16;
 }

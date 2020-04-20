@@ -20,10 +20,10 @@ export class ItemsComponent implements OnInit {
         private activeRoute: ActivatedRoute
     ) {
         this.items$ = this.itemsService.items;
-        this.itemsService.get();
     }
 
     ngOnInit(): void {
+        this.itemsService.get();
         // this.itemsService.items.subscribe((items) => {
         //     if (items.length > 0) {
         //         console.log(items);
