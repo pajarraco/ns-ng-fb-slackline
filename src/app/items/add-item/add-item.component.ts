@@ -13,6 +13,7 @@ import { ItemsService } from "../items.service";
 })
 export class AddItemComponent implements OnInit {
     item: DataItem;
+    action: string;
     constructor(
         private routerExtensions: RouterExtensions,
         private activeRoute: ActivatedRoute,
@@ -21,7 +22,17 @@ export class AddItemComponent implements OnInit {
         this.item = new Item();
     }
 
-    ngOnInit(): void {}
+    ngOnInit(): void {
+        this.itemService.itemToEdit.subscribe((item) => {
+            if (item) {
+                this.item = item;
+                this.action = "update";
+            } else {
+                this.item = new Item();
+                this.action = "add";
+            }
+        });
+    }
 
     onSave() {
         // console.log(this.item);
@@ -29,8 +40,11 @@ export class AddItemComponent implements OnInit {
             alert("Please provide both an email address and password.");
             return;
         } else {
-            this.itemService.add(this.item);
-            //test
+            if (this.action === "add") {
+                this.itemService.add(this.item);
+            } else {
+                this.itemService.update(this.item);
+            }
             this.routerExtensions.navigate(["../default"], {
                 relativeTo: this.activeRoute,
                 animated: true,

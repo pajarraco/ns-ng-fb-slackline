@@ -12,11 +12,31 @@ export class ItemsService {
     itemsCollection: firestore.CollectionReference;
     private _items: BehaviorSubject<Array<DataItem>> = new BehaviorSubject([]);
     items: Observable<Array<DataItem>> = this._items.asObservable();
+    private _itemToEdit: BehaviorSubject<DataItem> = new BehaviorSubject(null);
+    itemToEdit: Observable<DataItem> = this._itemToEdit.asObservable();
 
     constructor() {
         console.log("service constructed");
-
         this.itemsCollection = firebase.firestore.collection("items");
+    }
+
+    delete(item: DataItem) {
+        this.itemsCollection
+            .doc(item.id)
+            .delete()
+            .then((documentRef) => console.log("DocRef: ", documentRef))
+            .catch((err) => console.log(err));
+    }
+
+    update(item: DataItem) {
+        this.itemsCollection
+            .doc(item.id)
+            .update({
+                name: item.name,
+                position: item.position,
+            })
+            .then((documentRef) => console.log("DocRef: ", documentRef))
+            .catch((err) => console.log(err));
     }
 
     get() {
@@ -44,6 +64,10 @@ export class ItemsService {
             .add(item)
             .then((documentRef) => console.log("DocRef: ", documentRef))
             .catch((err) => console.log(err));
+    }
+
+    setItemToEdit(item: DataItem) {
+        this._itemToEdit.next(item);
     }
 
     getItems() {

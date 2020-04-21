@@ -22,6 +22,7 @@
 .editViewStackLayout {
   background-color: green;
   width: 50;
+  margin-left: 20;
 }
 
 .deleteViewStackLayout {
@@ -31,4 +32,8 @@
 
 .gridLayoutLayout {
   background-color: white;
+}
+
+.LabelViewStack {
+  padding-top: 15;
 }

@@ -9,6 +9,7 @@ import { Label } from "tns-core-modules/ui/label";
 import { Frame } from "tns-core-modules/ui/frame/frame";
 import { ActivatedRoute } from "@angular/router";
 import { RouterExtensions } from "nativescript-angular/router";
+import { confirm } from "tns-core-modules/ui/dialogs";
 
 @Component({
     selector: "ns-items",
@@ -54,12 +55,28 @@ export class ItemsComponent implements OnInit {
     public onSwipeCellFinished(args: ListViewEventData) {}
 
     public onEditSwipeClick(args) {
-        console.log("Right Edit swipe click");
+        const item = args.object.bindingContext;
+        console.log("Right Edit swipe click", item);
+        this.itemsService.setItemToEdit(item);
+        this.onAdd();
         this.myListViewComponent.listView.notifySwipeToExecuteFinished();
     }
 
     public onDeleteSwipeClick(args) {
-        console.log("Right Delete swipe click");
+        const item = args.object.bindingContext;
+        console.log("Right Delete swipe click", item);
+        confirm({
+            title: "Delete Item",
+            message: "Are you sure?",
+            okButtonText: "DELETE",
+            cancelButtonText: "Cancel",
+        }).then((result) => {
+            console.log("Dialog result: " + result);
+            if (result) {
+                this.itemsService.delete(item);
+                this.itemsService.get();
+            }
+        });
         this.myListViewComponent.listView.notifySwipeToExecuteFinished();
     }
 
@@ -74,12 +91,6 @@ export class ItemsComponent implements OnInit {
     public onLabelTap(args) {
         const message = "Tap on Title: " + (<Label>args.object).text;
         console.log(message);
-    }
-
-    onItemSelected(args: ListViewEventData) {
-        const listview = args.object as RadListView;
-        const selectedItems = listview.getSelectedItems();
-        console.log("Item Selected: ", selectedItems);
     }
 
     onAdd() {
