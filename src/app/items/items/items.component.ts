@@ -1,8 +1,12 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, ViewChild } from "@angular/core";
 import { Observable, BehaviorSubject } from "rxjs";
 import { ItemsService } from "../items.service";
 import { DataItem } from "../items";
-import { ListViewEventData } from "nativescript-ui-listview";
+import { ListViewEventData, RadListView } from "nativescript-ui-listview";
+import { RadListViewComponent } from "nativescript-ui-listview/angular";
+import { View } from "tns-core-modules/ui/core/view";
+import { Label } from "tns-core-modules/ui/label";
+import { Frame } from "tns-core-modules/ui/frame/frame";
 import { ActivatedRoute } from "@angular/router";
 import { RouterExtensions } from "nativescript-angular/router";
 
@@ -13,6 +17,8 @@ import { RouterExtensions } from "nativescript-angular/router";
 })
 export class ItemsComponent implements OnInit {
     items$: Observable<Array<DataItem>>;
+    @ViewChild("myListView", { read: RadListViewComponent, static: false })
+    myListViewComponent: RadListViewComponent;
 
     constructor(
         private itemsService: ItemsService,
@@ -29,6 +35,51 @@ export class ItemsComponent implements OnInit {
         //         console.log(items);
         //     }
         // });
+    }
+
+    public onCellSwiping(args: ListViewEventData) {
+        const swipeLimits = args.data.swipeLimits;
+        const currentItemView = args.object;
+    }
+
+    public onSwipeCellStarted(args: ListViewEventData) {
+        const swipeLimits = args.data.swipeLimits;
+        const swipeView = args["object"];
+        const rightItem = swipeView.getViewById<View>("right-stack");
+        swipeLimits.left = 0;
+        swipeLimits.right = rightItem.getMeasuredWidth();
+        swipeLimits.threshold = rightItem.getMeasuredWidth() / 2;
+    }
+
+    public onSwipeCellFinished(args: ListViewEventData) {}
+
+    public onEditSwipeClick(args) {
+        console.log("Right Edit swipe click");
+        this.myListViewComponent.listView.notifySwipeToExecuteFinished();
+    }
+
+    public onDeleteSwipeClick(args) {
+        console.log("Right Delete swipe click");
+        this.myListViewComponent.listView.notifySwipeToExecuteFinished();
+    }
+
+    public onLayoutTap(args) {
+        const message =
+            "Tap on Layout for item: " +
+            (<DataItem>args.object.bindingContext).name;
+        console.log(message);
+        this.myListViewComponent.listView.notifySwipeToExecuteFinished();
+    }
+
+    public onLabelTap(args) {
+        const message = "Tap on Title: " + (<Label>args.object).text;
+        console.log(message);
+    }
+
+    onItemSelected(args: ListViewEventData) {
+        const listview = args.object as RadListView;
+        const selectedItems = listview.getSelectedItems();
+        console.log("Item Selected: ", selectedItems);
     }
 
     onAdd() {

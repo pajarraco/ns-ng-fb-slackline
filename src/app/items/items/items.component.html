@@ -2,18 +2,71 @@
   <Label text="Items"></Label>
 </ActionBar>
 
-<GridLayout>
+<GridLayout
+  orientation="vertical"
+  rows="*, auto"
+  tkExampleTitle
+  tkToggleNavButton
+>
   <RadListView
+    #myListView
     [items]="items$ | async"
     pullToRefresh="true"
     (pullToRefreshInitiated)="onPullToRefresh($event)"
+    selectionBehavior="None"
+    (itemSwipeProgressEnded)="onSwipeCellFinished($event)"
+    (itemSwipeProgressStarted)="onSwipeCellStarted($event)"
+    (itemSwipeProgressChanged)="onCellSwiping($event)"
+    swipeActions="true"
   >
     <ng-template tkListItemTemplate let-item="item">
-      <StackLayout>
-        <Label [text]="item.name"></Label>
+      <StackLayout
+        (tap)="onLayoutTap($event)"
+        class="listItemStackLayout"
+        orientation="vertical"
+      >
+        <Label [text]="item.name" (tap)="onLabelTap($event)"></Label>
         <label [text]="item.position"></label>
       </StackLayout>
     </ng-template>
+
+    <GridLayout
+      *tkListItemSwipeTemplate
+      columns="*, auto"
+      class="gridLayoutLayout"
+    >
+      <GridLayout columns="*, *" col="1" id="right-stack">
+        <StackLayout
+          id="edit-view"
+          col="0"
+          class="editViewStackLayout"
+          (tap)="onEditSwipeClick($event)"
+        >
+          <Label
+            text="&#xf044;"
+            class="far"
+            verticalAlignment="center"
+            horizontalAlignment="center"
+          ></Label>
+        </StackLayout>
+        <StackLayout
+          id="delete-view"
+          col="1"
+          class="deleteViewStackLayout"
+          (tap)="onDeleteSwipeClick($event)"
+        >
+          <Label
+            text="&#xf2ed;"
+            class="far"
+            verticalAlignment="center"
+            horizontalAlignment="center"
+          ></Label>
+          <!-- <Image src="font://&#xf1ea;" class="far t-36"></!-->
+          -->
+        </StackLayout>
+      </GridLayout>
+    </GridLayout>
+
     <ng-template tkListViewFooter>
       <FlexboxLayout
         justifyContent="flex-end"
