@@ -13,6 +13,7 @@ const APPSPOT_BUCKET_URL = "gs://test-mobile-2.appspot.com";
     templateUrl: "./home.component.html",
 })
 export class HomeComponent implements OnInit {
+    imageUrl: string;
     constructor() {
         // Use the component constructor to inject providers.
     }
@@ -71,6 +72,17 @@ export class HomeComponent implements OnInit {
                         metadata,
                     })
                     .then((uploadedFile) => {
+                        storage
+                            .getDownloadUrl({
+                                bucket: APPSPOT_BUCKET_URL,
+                                remoteFullPath: "uploads/images/" + filename,
+                            })
+                            .then((url) => {
+                                this.imageUrl = url;
+                            })
+                            .catch((err) => {
+                                console.log(err);
+                            });
                         console.log(
                             "File uploaded: " + JSON.stringify(uploadedFile)
                         );
