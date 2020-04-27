@@ -1,7 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 
 import { storage } from "nativescript-plugin-firebase";
-import { File, knownFolders, path } from "tns-core-modules/file-system";
+import { File } from "tns-core-modules/file-system";
 import { Image } from "tns-core-modules/ui/image";
 import { isAndroid, isIOS } from "tns-core-modules/platform";
 
@@ -13,19 +13,6 @@ const APPSPOT_BUCKET_URL = "gs://test-mobile-2.appspot.com";
     templateUrl: "./home.component.html",
 })
 export class HomeComponent implements OnInit {
-    private _message: string = "";
-
-    get message() {
-        return this._message;
-    }
-
-    set message(value: string) {
-        if (this.message != value) {
-            this._message = value;
-            console.log("message", value);
-        }
-    }
-
     constructor() {
         // Use the component constructor to inject providers.
     }
@@ -46,9 +33,12 @@ export class HomeComponent implements OnInit {
                 console.log("image: ", JSON.stringify(image, null, 2));
 
                 let path;
+                let platform;
                 if (isAndroid) {
+                    platform = "Android";
                     path = image.src._android;
                 } else if (isIOS) {
+                    platform = "iOS";
                     path = image.src._ios;
                 }
 
@@ -58,8 +48,7 @@ export class HomeComponent implements OnInit {
                     contentType: "image/jpeg",
                     contentLanguage: "en",
                     customMetadata: {
-                        foo: "bar",
-                        foo2: "bar2",
+                        platform: platform,
                     },
                 };
 
@@ -85,8 +74,6 @@ export class HomeComponent implements OnInit {
                         console.log(
                             "File uploaded: " + JSON.stringify(uploadedFile)
                         );
-                        this.message =
-                            "File uploaded: " + JSON.stringify(uploadedFile);
                     })
                     .catch((err) => {
                         console.log(err);
